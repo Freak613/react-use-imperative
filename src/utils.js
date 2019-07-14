@@ -5,3 +5,5 @@ export const continuation = () => {
   const promise = new Promise(r => resolve = r);
   return [resolve, promise];
 };
+
+export const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
