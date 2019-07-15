@@ -7,21 +7,22 @@ import {
   ImperativeProvider,
 } from './useImperative';
 import { sleep } from './utils';
+import { async } from './toCancellablePromise';
 
-function* waitAndDone(render) {
+const waitAndDone = render => async(function* () {
   yield render('Loading');
   yield sleep(1000);
   yield render('Result');
   yield sleep(1000);
   console.log('done');
-}
-function* waitAndThrow(render) {
+});
+const waitAndThrow = render => async(function* () {
   yield render('Loading');
   yield sleep(1000);
   yield render('Result');
   yield sleep(1000);
   throw new Error('Fail');
-}
+});
 const promiseWaitAndThrow = async render => {
   await render('Loading');
   await sleep(1000);
@@ -54,10 +55,10 @@ const Runner = ({ render }) => {
 
 const waitAndKeepRunning = waitAndDone;
 
-function* waitAndHide(render) {
-  yield* waitAndDone(render);
+const waitAndHide = render => async(function* () {
+  yield waitAndDone(render);
   return null;
-}
+});
 
 storiesOf('tools/ImperativeProvider', module)
   .addDecorator(childrenFn => (

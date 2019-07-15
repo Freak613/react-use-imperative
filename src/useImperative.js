@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 
-import { toCancellablePromise } from './toCancellablePromise';
 import { useAction } from './useAction';
-import { continuation, isNullOrUndef } from './utils';
+import { continuation } from './utils';
+import { toCancellablePromise } from './toCancellablePromise';
 
 const stateLens = (prop, setState) => v => (
   setState(prev => ({ ...prev, [prop]: v }))
@@ -29,9 +29,7 @@ export const useImperative = (fn, onDone) => {
     const result = fn(setChildren);
 
     let childrenP;
-    if (isNullOrUndef(result)) childrenP = Promise.resolve(result);
-    else if (result.next) childrenP = toCancellablePromise(result);
-    else if (result.then) childrenP = result;
+    if (result && result.then) childrenP = result;
     else childrenP = Promise.resolve(result);
 
     childrenP

@@ -71,3 +71,5 @@ export const toCancellablePromise = gen => {
 
   return promise;
 };
+
+export const async = gen => toCancellablePromise(gen());
