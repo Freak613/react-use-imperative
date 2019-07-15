@@ -1,7 +1,8 @@
 {
   "name": "react-use-imperative",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Imperatively change UI over time",
+  "source": "src/index.js",
   "main": "dist/index.js",
   "scripts": {
     "build-prod": "rollup -c"
@@ -24,5 +25,8 @@
     "rollup": "^1.17.0",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.0.1"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0"
   }
 }
