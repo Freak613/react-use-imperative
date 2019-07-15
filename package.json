@@ -1,10 +1,10 @@
 {
   "name": "react-use-imperative",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Imperatively change UI over time",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-prod": "rollup -c"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,12 @@
   },
   "homepage": "https://github.com/Freak613/react-use-imperative#readme",
   "dependencies": {
-    "react": "^16.8.6"
+    "@babel/core": "^7.5.4",
+    "@babel/preset-env": "^7.5.4",
+    "@babel/preset-react": "^7.0.0",
+    "react": "^16.8.6",
+    "rollup": "^1.17.0",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.0.1"
   }
 }
