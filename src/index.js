@@ -5,7 +5,6 @@ import { RenderPointContext, useRenderPoint, RenderPointProvider } from './Rende
 
 export {
   useImperative,
-  useImperativeContext,
   toCancellablePromise,
   async,
   useAction,
