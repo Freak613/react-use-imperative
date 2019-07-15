@@ -1,21 +1,15 @@
-import {
-  useImperative,
-  Imperative,
-  ImperativeRenderContext,
-  ImperativeProvider,
-  useImperativeContext,
-} from './useImperative';
-import { toCancellablePromise } from './toCancellablePromise';
+import { useImperative } from './useImperative';
+import { toCancellablePromise, async } from './toCancellablePromise';
 import { useAction } from './useAction';
-import { continuation } from './utils';
+import { RenderPointContext, useRenderPoint, RenderPointProvider } from './RenderPoint';
 
 export {
   useImperative,
-  Imperative,
-  ImperativeRenderContext,
-  ImperativeProvider,
   useImperativeContext,
   toCancellablePromise,
+  async,
   useAction,
-  continuation
+  RenderPointContext,
+  useRenderPoint,
+  RenderPointProvider,
 };

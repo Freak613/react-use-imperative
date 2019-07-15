@@ -1,11 +1,8 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
 
-import {
-  Imperative,
-  useImperativeContext,
-  ImperativeProvider,
-} from './useImperative';
+import { useImperative } from './useImperative';
+import { RenderPointProvider, useRenderPoint } from './RenderPoint';
 import { sleep } from './utils';
 import { async } from './toCancellablePromise';
 
@@ -31,21 +28,23 @@ const promiseWaitAndThrow = async render => {
   throw new Error('Fail');
 };
 
+const HookTester = ({ play }) => useImperative(play);
+
 storiesOf('tools/useImperative', module)
   .addDecorator(childrenFn => (
     <ErrorBoundary>{ childrenFn() }</ErrorBoundary>
   ))
-  .add('as hook', () => <Imperative play={ waitAndDone } />)
-  .add('throw with yield', () => <Imperative play={ waitAndThrow } />)
+  .add('as hook', () => <HookTester play={ waitAndDone } />)
+  .add('throw with yield', () => <HookTester play={ waitAndThrow } />)
   .add('throw with promise', () => (
-    <Imperative play={ promiseWaitAndThrow } />
+    <HookTester play={ promiseWaitAndThrow } />
   ));
 
-const Runner = ({ render }) => {
-  const useParent = useImperativeContext();
+const Runner = ({ component }) => {
+  const useParent = useRenderPoint();
 
   const onClick = () => {
-    useParent(render);
+    useParent(component);
   };
 
   return (
@@ -53,31 +52,37 @@ const Runner = ({ render }) => {
   );
 };
 
-const waitAndKeepRunning = waitAndDone;
+const WaitAndThrow = () => useImperative(waitAndThrow);
 
-const waitAndHide = render => async(function* () {
-  yield waitAndDone(render);
-  return null;
-});
+const WaitAndKeepRunning = () => useImperative(waitAndDone);
+
+const WaitAndHide = () => {
+  const useParent = useRenderPoint();
+
+  return useImperative(render => async(function* () {
+    yield waitAndDone(render);
+    useParent(null);
+  }));
+};
 
 storiesOf('tools/ImperativeProvider', module)
   .addDecorator(childrenFn => (
     <ErrorBoundary>{ childrenFn() }</ErrorBoundary>
   ))
   .add('render waitAndThrow', () => (
-    <ImperativeProvider>
-      <Runner render={ waitAndThrow } />
-    </ImperativeProvider>
+    <RenderPointProvider>
+      <Runner component={ <WaitAndThrow /> } />
+    </RenderPointProvider>
   ))
   .add('render waitAndKeepRunning', () => (
-    <ImperativeProvider>
-      <Runner render={ waitAndKeepRunning } />
-    </ImperativeProvider>
+    <RenderPointProvider>
+      <Runner component={ <WaitAndKeepRunning /> } />
+    </RenderPointProvider>
   ))
   .add('render waitAndHide', () => (
-    <ImperativeProvider>
-      <Runner render={ waitAndHide } />
-    </ImperativeProvider>
+    <RenderPointProvider>
+      <Runner component={ <WaitAndHide /> } />
+    </RenderPointProvider>
   ));
 
 class ErrorBoundary extends React.Component {

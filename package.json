@@ -1,6 +1,6 @@
 {
   "name": "react-use-imperative",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Imperatively change UI over time",
   "main": "index.js",
   "scripts": {

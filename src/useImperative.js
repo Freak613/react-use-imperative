@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 
 import { useAction } from './useAction';
 import { continuation } from './utils';
-import { toCancellablePromise } from './toCancellablePromise';
 
 const stateLens = (prop, setState) => v => (
   setState(prev => ({ ...prev, [prop]: v }))
 );
 
-export const useImperative = (fn, onDone) => {
+export const useImperative = fn => {
   const [state, setState] = useState({
     children: null,
     error: null,
@@ -39,7 +38,6 @@ export const useImperative = (fn, onDone) => {
         }
         return v;
       })
-      .then(v => { if (onDone) onDone(v); })
       .catch(setError);
 
     return () => {
@@ -54,23 +52,4 @@ export const useImperative = (fn, onDone) => {
   if (state.error !== null) throw state.error;
 
   return state.children;
-};
-
-export const Imperative = ({ play, onDone }) => useImperative(play, onDone);
-
-export const ImperativeRenderContext = React.createContext();
-export const useImperativeContext = () => useContext(ImperativeRenderContext);
-export const ImperativeProvider = ({ children }) => {
-  const [state, setState] = useState({ render: null });
-
-  const setRender = stateLens('render', setState);
-  const onDone = lastChildren => {
-    if (lastChildren === null) setRender(null);
-  };
-
-  const content = state.render !== null
-    ? React.createElement(Imperative, { play: state.render, onDone })
-    : children;
-
-  return React.createElement(ImperativeRenderContext.Provider, { value: setRender }, content);
 };
